@@ -9,6 +9,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/observable/of';
 import {Observable} from 'rxjs/Observable';
+import {ParserService} from "./parser";
 
 @Component({
   selector: 'app-root',
@@ -19,54 +20,19 @@ export class AppComponent implements OnInit {
   bankTransactions = new FormControl();
   ynabTransactions = [];
 
+  constructor(private parser: ParserService) {}
+
   ngOnInit(): void {
     this.bankTransactions
       .valueChanges
       .debounceTime(300)
       .distinctUntilChanged()
-      .map(input => this.formatBankTransactionsToYnab(input))
+      .map(input => this.parser.parse(input))
       .catch((err, caught) => {
         console.error(err);
         return Observable.of([]).concat(caught)
       })
       .subscribe(transactions => this.ynabTransactions = transactions);
-  }
-
-  formatBankTransactionsToYnab(input: string): any[] {
-    const lines = input.split('\n');
-    const transactions  = lines.map(line => {
-      const fields = line.split('\t');
-
-      const parsedAmount = this.parseNumber(fields[1]);
-      const inflow = (parsedAmount > 0) ? parsedAmount : 0;
-      const outflow = (parsedAmount < 0) ? -parsedAmount : 0;
-
-      return {
-        date: this.formatDate(fields[0]),
-        payee: fields[4],
-        outflow: outflow,
-        inflow: inflow
-      };
-    });
-    return transactions;
-  }
-
-  formatDate(input: string): string {
-    const fields = input.split('.');
-    const day = fields[0];
-    const month = fields[1];
-    const year = fields[2];
-
-    const paddedDay = (day.length === 1) ? '0' + day : day;
-    const paddedMonth = (month.length === 1) ? '0' + month : month;
-
-    return paddedDay + '/' + paddedMonth + '/' + year;
-  }
-
-  parseNumber(input: string): number {
-    const sansSpaces = input.replace(/ /g, '');
-    const commaReplaced = sansSpaces.replace(',', '.');
-    return Number(commaReplaced);
   }
 
   download(): void {

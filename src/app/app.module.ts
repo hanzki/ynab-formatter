@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 
 import { AppComponent } from './app.component';
+import {ParserService} from './parser';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [ParserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
