@@ -3,7 +3,13 @@ import {Injectable} from '@angular/core';
 @Injectable()
 export class ParserService {
 
-  parse(input) { return this.formatBankTransactionsToYnab(input) }
+  parse(source, input) { switch (source) {
+      case 'bank':
+        return this.formatBankTransactionsToYnab(input);
+      case 'ticketduo':
+        return this.formatTicketDuoTransactionsToYnab(input);
+    }
+  }
 
   formatBankTransactionsToYnab(input: string): any[] {
     const lines = input.split('\n');
@@ -44,7 +50,7 @@ export class ParserService {
   }
 
 
-  formatTicketDuoToYnab(input: string): any[] {
+  formatTicketDuoTransactionsToYnab(input: string): any[] {
     const lines = input.split('\t\n');
     const nonEmptyLines = lines.filter(line => line.trim() !== '');
     const nonFailedTransactions = nonEmptyLines.filter(line => line.split('\t')[2] !== 'Hylätty');

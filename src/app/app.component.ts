@@ -6,10 +6,12 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/observable/of';
 import {Observable} from 'rxjs/Observable';
-import {ParserService} from "./parser";
+import {ParserService} from './parser';
 
 @Component({
   selector: 'app-root',
@@ -18,16 +20,20 @@ import {ParserService} from "./parser";
 })
 export class AppComponent implements OnInit {
   bankTransactions = new FormControl();
+  transactionType = new FormControl('bank');
   ynabTransactions = [];
 
   constructor(private parser: ParserService) {}
 
   ngOnInit(): void {
-    this.bankTransactions
-      .valueChanges
+    const transactionInput$ = this.bankTransactions.valueChanges.startWith('');
+    const transactionSourceInput$ = this.transactionType.valueChanges.startWith(this.transactionType.value);
+
+    transactionInput$
+      .combineLatest(transactionSourceInput$)
       .debounceTime(300)
       .distinctUntilChanged()
-      .map(input => this.parser.parse(input))
+      .map(([input, source]) => this.parser.parse(source, input))
       .catch((err, caught) => {
         console.error(err);
         return Observable.of([]).concat(caught)

@@ -33,17 +33,17 @@ describe('ValueService', () => {
 
   });
 
-  describe('#formatTicketDuoToYnab', () => {
+  describe('#formatTicketDuoTransactionsToYnab', () => {
 
     it('should return empty array on empty input', () => {
-      expect(parser.formatTicketDuoToYnab('')).toEqual([]);
+      expect(parser.formatTicketDuoTransactionsToYnab('')).toEqual([]);
     });
 
     it('should parse single transaction correctly', () => {
       const input = '07.03.18 17:24\tMCD KAMPPI - MCD KAMPPI\n' +
                     '\t\t-7,70\t';
       const expectation = {date: '07/03/2018', payee: 'MCD KAMPPI - MCD KAMPPI', outflow: 7.70, inflow: 0};
-      expect(parser.formatTicketDuoToYnab(input)).toEqual([expectation]);
+      expect(parser.formatTicketDuoTransactionsToYnab(input)).toEqual([expectation]);
     });
 
     it('should parse multiple transaction correctly', () => {
@@ -61,7 +61,7 @@ describe('ValueService', () => {
         { date: '07/03/2018', payee: 'MCD KAMPPI - MCD KAMPPI', outflow: 7.7, inflow: 0 },
         { date: '27/02/2018', payee: 'AALTO T-TALO SUBWAY - AALTO T-TALO SUBWAY', outflow: 7.93, inflow: 0 }
       ];
-      expect(parser.formatTicketDuoToYnab(input)).toEqual(expectation);
+      expect(parser.formatTicketDuoTransactionsToYnab(input)).toEqual(expectation);
     });
 
     it('should parse top up transaction correctly', () => {
@@ -69,7 +69,7 @@ describe('ValueService', () => {
       const expectation = [
         { date: '06/02/2018', payee: '', outflow: 0, inflow: 150 }
       ];
-      expect(parser.formatTicketDuoToYnab(input)).toEqual(expectation);
+      expect(parser.formatTicketDuoTransactionsToYnab(input)).toEqual(expectation);
     });
 
   });
