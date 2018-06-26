@@ -48,13 +48,13 @@ describe('ValueService', () => {
 
     it('should parse multiple transaction correctly', () => {
       const input = '13.03.18 12:17\tSodexo Teollisuuskatu HELSINKI\n' +
-                    '\tKatevaraus\t-9,40\t\n' +
-                    '10.03.18 17:37\tHesburger 09101 Karkki - Hesburger 09101 Karkkila\n' +
-                    '\t\t-7,90\t\n' +
-                    '07.03.18 17:24\tMCD KAMPPI - MCD KAMPPI\n' +
-                    '\t\t-7,70\t\n' +
-                    '27.02.18 19:08\tAALTO T-TALO SUBWAY - AALTO T-TALO SUBWAY\n' +
-                    '\t\t-7,93\t';
+        '\tKatevaraus\t-9,40\t\n' +
+        '10.03.18 17:37\tHesburger 09101 Karkki - Hesburger 09101 Karkkila\n' +
+        '\t\t-7,90\t\n' +
+        '07.03.18 17:24\tMCD KAMPPI - MCD KAMPPI\n' +
+        '\t\t-7,70\t\n' +
+        '27.02.18 19:08\tAALTO T-TALO SUBWAY - AALTO T-TALO SUBWAY\n' +
+        '\t\t-7,93\t';
       const expectation = [
         { date: '13/03/2018', payee: 'Sodexo Teollisuuskatu HELSINKI', outflow: 9.4, inflow: 0 },
         { date: '10/03/2018', payee: 'Hesburger 09101 Karkki - Hesburger 09101 Karkkila', outflow: 7.9, inflow: 0 },
@@ -73,6 +73,53 @@ describe('ValueService', () => {
     });
 
   });
+
+  describe('#formatBankOfNorwegianTransactionsToYnab', () => {
+
+    it('should return empty array on empty input', () => {
+      expect(parser.formatBankOfNorwegianTransactionsToYnab('')).toEqual([]);
+    });
+
+    it('should parse single transaction correctly', () => {
+
+      const input = '\n' +
+      'Päiväys\tTeksti\tValuuttasumma\tValuuttakurssi\tMäärä\n' +
+      '22.06.18\t\n' +
+      'ABC PITKAJARVI\n' +
+      'Osto\n' +
+      '-31,15';
+
+      const expectation = {date: '22/06/2018', payee: 'ABC PITKAJARVI', outflow: 31.15, inflow: 0};
+      expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual([expectation]);
+    });
+
+    it('should parse multiple transactions correctly', () => {
+
+      const input = '\n' +
+        'Päiväys\tTeksti\tValuuttasumma\tValuuttakurssi\tMäärä\n' +
+        '22.06.18\t\n' +
+        'ABC PITKAJARVI\n' +
+        'Osto\n' +
+        '-31,15\n' +
+        '22.06.18\t\n' +
+        'S MARKET JUANKOSKI\n' +
+        'Osto\n' +
+        '-367,29\n' +
+        '15.06.18\t\n' +
+        'K market BioCity\n' +
+        'Osto\n' +
+        '-5,20';
+
+      const expectation = [
+        {date: '22/06/2018', payee: 'ABC PITKAJARVI', outflow: 31.15, inflow: 0},
+        {date: '22/06/2018', payee: 'S MARKET JUANKOSKI', outflow: 367.29, inflow: 0},
+        {date: '15/06/2018', payee: 'K market BioCity', outflow: 5.20, inflow: 0}
+      ];
+
+      expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);
+    });
+
+  })
 
 
 });

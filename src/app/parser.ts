@@ -8,6 +8,8 @@ export class ParserService {
         return this.formatBankTransactionsToYnab(input);
       case 'ticketduo':
         return this.formatTicketDuoTransactionsToYnab(input);
+    case 'norwegian':
+        return this.formatBankOfNorwegianTransactionsToYnab(input);
     }
   }
 
@@ -44,6 +46,7 @@ export class ParserService {
   }
 
   private parseNumber(input: string): number {
+    if(!input) return NaN;
     const sansSpaces = input.replace(/ /g, '');
     const commaReplaced = sansSpaces.replace(',', '.');
     return Number(commaReplaced);
@@ -87,6 +90,37 @@ export class ParserService {
 
   private formatTicketDuoPayee(input: string): string {
     return input.split('\n')[0];
+  }
+
+  formatBankOfNorwegianTransactionsToYnab(input: string): any[] {
+    const lines = input.split('\n');
+    const nonEmptyLines = lines.map(line => line.trim()).filter(line => line !== '');
+    const transactions = [];
+
+    console.log(nonEmptyLines);
+
+    let i;
+    while (( i = nonEmptyLines.findIndex(l => /\d\d\.\d\d\.\d\d/.test(l))) !== -1) {
+
+      const date = this.formatTicketDuoDate(nonEmptyLines[i]);
+      const parsedAmount = this.parseNumber(nonEmptyLines[i + 3]);
+      const inflow = (parsedAmount > 0) ? parsedAmount : 0;
+      const outflow = (parsedAmount < 0) ? -parsedAmount : 0;
+
+      transactions.push({
+        date: date,
+        payee: nonEmptyLines[i + 1],
+        outflow: outflow,
+        inflow: inflow
+      });
+
+      nonEmptyLines.splice(0, i + 4)
+
+    }
+
+    console.log(transactions);
+
+    return transactions;
   }
 
 }
