@@ -119,6 +119,32 @@ describe('ValueService', () => {
       expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);
     });
 
+    it('should parse transactions done in foreign currency', () => {
+
+      const input = '\n' +
+        'Päiväys\tTeksti\tValuuttasumma\tValuuttakurssi\tMäärä\n' +
+        '08.07.18\t\n' +
+        'TFL.GOV.UK/CP\n' +
+        'Osto\n' +
+        '-5,60 GBP\t1,1518\t-6,45\n' +
+        '05.07.18\t\n' +
+        'ATM LHR T3 ASA\n' +
+        'Käteisnosto\n' +
+        '-100,00 GBP\t1,1557\t-115,57\n' +
+        '03.07.18\t\n' +
+        'AWS\n' +
+        'Osto\n' +
+        '-0,74 USD\t0,8784\t-0,65\n';
+
+      const expectation = [
+        {date: '08/07/2018', payee: 'TFL.GOV.UK/CP', outflow: 6.45, inflow: 0},
+        {date: '05/07/2018', payee: 'ATM LHR T3 ASA', outflow: 115.57, inflow: 0},
+        {date: '03/07/2018', payee: 'AWS', outflow: 0.65, inflow: 0}
+      ];
+
+      expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);
+    });
+
   })
 
 

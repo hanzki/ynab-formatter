@@ -103,7 +103,8 @@ export class ParserService {
     while (( i = nonEmptyLines.findIndex(l => /\d\d\.\d\d\.\d\d/.test(l))) !== -1) {
 
       const date = this.formatTicketDuoDate(nonEmptyLines[i]);
-      const parsedAmount = this.parseNumber(nonEmptyLines[i + 3]);
+      const amounts = nonEmptyLines[i + 3].split('\t'); // either amount or foreignAmount<TAB>exchangeRate<TAB>amount
+      const parsedAmount = this.parseNumber(amounts[amounts.length - 1]);
       const inflow = (parsedAmount > 0) ? parsedAmount : 0;
       const outflow = (parsedAmount < 0) ? -parsedAmount : 0;
 
