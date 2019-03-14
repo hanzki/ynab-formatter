@@ -82,38 +82,38 @@ describe('ValueService', () => {
 
     it('should parse single transaction correctly', () => {
 
-      const input = '\n' +
-      'Päiväys\tTeksti\tValuuttasumma\tValuuttakurssi\tMäärä\n' +
-      '22.06.18\t\n' +
-      'ABC PITKAJARVI\n' +
-      'Osto\n' +
-      '-31,15';
+      const input = 'R ESPOO AALTOYO METROKESK\n' +
+        '27.02.19 - Osto\n' +
+        '-4,00\n' +
+        '\n';
 
-      const expectation = {date: '22/06/2018', payee: 'ABC PITKAJARVI', outflow: 31.15, inflow: 0};
+      const expectation = {date: '27/02/2019', payee: 'R ESPOO AALTOYO METROKESK', outflow: 4.00, inflow: 0};
       expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual([expectation]);
     });
 
     it('should parse multiple transactions correctly', () => {
 
-      const input = '\n' +
-        'Päiväys\tTeksti\tValuuttasumma\tValuuttakurssi\tMäärä\n' +
-        '22.06.18\t\n' +
-        'ABC PITKAJARVI\n' +
-        'Osto\n' +
-        '-31,15\n' +
-        '22.06.18\t\n' +
-        'S MARKET JUANKOSKI\n' +
-        'Osto\n' +
-        '-367,29\n' +
-        '15.06.18\t\n' +
-        'K market BioCity\n' +
-        'Osto\n' +
-        '-5,20';
+      const input = 'R ESPOO AALTOYO METROKESK\n' +
+      '27.02.19 - Osto\n' +
+      '-4,00\n' +
+      '\n' +
+      'VFI*Manhattan Fast Food O\n' +
+      '27.02.19 - Osto\n' +
+      '-4,80\n' +
+      '\n' +
+      'R ESPOO AALTOYO METROKESK\n' +
+      '26.02.19 - Osto\n' +
+      '-4,00\n' +
+      '\n' +
+      'Maksaja HANNU HUHTAN\n' +
+      '15.02.19 - Maksu\n' +
+      '1 690,64\n';
 
       const expectation = [
-        {date: '22/06/2018', payee: 'ABC PITKAJARVI', outflow: 31.15, inflow: 0},
-        {date: '22/06/2018', payee: 'S MARKET JUANKOSKI', outflow: 367.29, inflow: 0},
-        {date: '15/06/2018', payee: 'K market BioCity', outflow: 5.20, inflow: 0}
+        {date: '27/02/2019', payee: 'R ESPOO AALTOYO METROKESK', outflow: 4.00, inflow: 0},
+        {date: '27/02/2019', payee: 'VFI*Manhattan Fast Food O', outflow: 4.80, inflow: 0},
+        {date: '26/02/2019', payee: 'R ESPOO AALTOYO METROKESK', outflow: 4.00, inflow: 0},
+        {date: '15/02/2019', payee: 'Maksaja HANNU HUHTAN', outflow: 0, inflow: 1690.64}
       ];
 
       expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);
@@ -121,25 +121,17 @@ describe('ValueService', () => {
 
     it('should parse transactions done in foreign currency', () => {
 
-      const input = '\n' +
-        'Päiväys\tTeksti\tValuuttasumma\tValuuttakurssi\tMäärä\n' +
-        '08.07.18\t\n' +
-        'TFL.GOV.UK/CP\n' +
-        'Osto\n' +
-        '-5,60 GBP\t1,1518\t-6,45\n' +
-        '05.07.18\t\n' +
-        'ATM LHR T3 ASA\n' +
-        'Käteisnosto\n' +
-        '-100,00 GBP\t1,1557\t-115,57\n' +
-        '03.07.18\t\n' +
-        'AWS\n' +
-        'Osto\n' +
-        '-0,74 USD\t0,8784\t-0,65\n';
+      const input = 'jiu mu za wu she\n' +
+      '09.02.19 - Osto\n' +
+      '-88,00 CNY\n' +
+      'Valutabeløp\n' +
+      '0,134\n' +
+      'Valutakurs\n' +
+      '-11,76\n' +
+      '\n';
 
       const expectation = [
-        {date: '08/07/2018', payee: 'TFL.GOV.UK/CP', outflow: 6.45, inflow: 0},
-        {date: '05/07/2018', payee: 'ATM LHR T3 ASA', outflow: 115.57, inflow: 0},
-        {date: '03/07/2018', payee: 'AWS', outflow: 0.65, inflow: 0}
+        {date: '09/02/2019', payee: 'jiu mu za wu she', outflow: 11.76, inflow: 0}
       ];
 
       expect(parser.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);

@@ -102,20 +102,28 @@ export class ParserService {
     let i;
     while (( i = nonEmptyLines.findIndex(l => /\d\d\.\d\d\.\d\d/.test(l))) !== -1) {
 
+      let blockSize = i + 2;
+
       const date = this.formatTicketDuoDate(nonEmptyLines[i]);
-      const amounts = nonEmptyLines[i + 3].split('\t'); // either amount or foreignAmount<TAB>exchangeRate<TAB>amount
-      const parsedAmount = this.parseNumber(amounts[amounts.length - 1]);
+      let parsedAmount = this.parseNumber(nonEmptyLines[i + 1]);
+
+      // If parsing amount fails the transaction is probably with foreign currency
+      if (isNaN(parsedAmount)) {
+        parsedAmount = this.parseNumber(nonEmptyLines[i + 5]);
+        blockSize = i + 6
+      }
+
       const inflow = (parsedAmount > 0) ? parsedAmount : 0;
       const outflow = (parsedAmount < 0) ? -parsedAmount : 0;
 
       transactions.push({
         date: date,
-        payee: nonEmptyLines[i + 1],
+        payee: nonEmptyLines[i - 1],
         outflow: outflow,
         inflow: inflow
       });
 
-      nonEmptyLines.splice(0, i + 4)
+      nonEmptyLines.splice(0, i + 2)
 
     }
 
