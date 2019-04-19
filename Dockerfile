@@ -1,7 +1,19 @@
+FROM node:8-alpine as builder
+
+COPY . /build
+
+WORKDIR /build
+
+RUN npm install \
+    && npm run build \
+    && rm -rf node_modules
+
+
 FROM nginx:alpine
 
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder /build/nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /usr/share/nginx/html
-COPY dist/ .
+
+COPY --from=builder /build/dist/ .
 
