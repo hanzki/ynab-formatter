@@ -10,8 +10,9 @@ export class ParserService {
       return this.formatTicketDuoTransactionsToYnab(input);
     case 'norwegian':
       return this.formatBankOfNorwegianTransactionsToYnab(input);
-  }
-  }
+    case 'kplussa':
+      return this.formatKPlussaCardBillToYnab(input);
+  }}
 
   formatBankTransactionsToYnab(input: string): any[] {
     const lines = input.split('\n');
@@ -137,15 +138,31 @@ export class ParserService {
     const nonEmptyLines = lines.map(line => line.trim()).filter(line => line !== '');
     const transactions = [];
 
-    nonEmptyLines.forEach(line => {
-      const regex = /^(\d\d)\.(\d\d)\.\s+Osto\s+(.+)\s(\d+,\d\d)$/;
-      const match = regex.exec(line)
+    const purchaseRegex = /^(\d\d)\.(\d\d)\.\s+Osto\s+(.+)\s(\d+,\d\d)$/;
+    const paymentRegex = /^(\d\d)\.(\d\d)\.\s+Lyhennys\s+(\d+,\d\d)$/;
 
-      if(match) {
-        const date = match[1] + '/' + match[2] + '/' + new Date().getFullYear();
-        const payee = match[3].trim();
-        const outflow = Number(match[4].replace(',', '.'));
+    nonEmptyLines.forEach(line => {
+
+      const purchaseMatch = purchaseRegex.exec(line);
+      const paymentMatch = paymentRegex.exec(line);
+
+      if (purchaseMatch) {
+        const date = purchaseMatch[1] + '/' + purchaseMatch[2] + '/' + new Date().getFullYear();
+        const payee = purchaseMatch[3].trim();
+        const outflow = Number(purchaseMatch[4].replace(',', '.'));
         const inflow = 0;
+
+        transactions.push({
+          date: date,
+          payee: payee,
+          outflow: outflow,
+          inflow: inflow
+        });
+      } else if (paymentMatch) {
+        const date = paymentMatch[1] + '/' + paymentMatch[2] + '/' + new Date().getFullYear();
+        const payee = 'Lyhennys';
+        const outflow = 0;
+        const inflow = Number(paymentMatch[3].replace(',', '.'));
 
         transactions.push({
           date: date,

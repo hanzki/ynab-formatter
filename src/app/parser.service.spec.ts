@@ -163,26 +163,59 @@ describe('ParserService', () => {
       expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
     }));
 
-    /*
-    "25.03. Saldo                                                               67,28\n" +
-    "25.03. Lyhennys                                                67,28\n" +
-    "       Saapuneet maksut yhteensä                                           67,28\n" +
-    "01.03. Osto  K MARKET OTANIEMI/ESPOO                                        9,34\n" +
-    "04.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                   7,56\n" +
-    "05.03. Osto  K MARKET OTANIEMI/ESPOO                                       11,57\n" +
-    "07.03. Osto  K MARKET OTANIEMI/ESPOO                                       15,58\n" +
-    "09.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  31,42\n" +
-    "12.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  17,40\n" +
-    "12.03. Osto  K SUPERMARKET KAISANIEMI/HEL                                   2,71\n" +
-    "19.03. Osto  K SUPERMARKET KAISANIEMI/HEL                                   1,19\n" +
-    "19.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  14,25\n" +
-    "20.03. Osto  K MARKET OTANIEMI/ESPOO                                        6,04\n" +
-    "20.03. Osto  K MARKET OTANIEMI/ESPOO                                        4,55\n" +
-    "21.03. Osto  K MARKET OTANIEMI/ESPOO                                        6,31\n" +
-    "25.03. Osto  K MARKET OTANIEMI/ESPOO                                        4,30\n" +
-    "29.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  11,32\n" +
-    "31.03. Osto  K MARKET OTANIEMI/ESPOO                                       22,48"
-    */
+    it('should parse multiple expense rows', inject([ParserService], (service: ParserService) => {
+      const input =
+        '01.03. Osto  K MARKET OTANIEMI/ESPOO                                        9,34\n' +
+        '04.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                   7,56\n' +
+        '05.03. Osto  K MARKET OTANIEMI/ESPOO                                       11,57';
+
+      const expectation = [
+        {date: '01/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0},
+        {date: '04/03/2019', payee: 'K SUPERMARKET KAMPPI/HELSINK', outflow: 7.56, inflow: 0},
+        {date: '05/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 11.57, inflow: 0}
+      ];
+
+      expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
+    }));
+
+    it('should parse credit card payment', inject([ParserService], (service: ParserService) => {
+      const input = '25.03. Lyhennys                                                67,28';
+
+      const expectation = [
+        {date: '25/03/2019', payee: 'Lyhennys', outflow: 0, inflow: 67.28}
+      ];
+
+      expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
+    }));
+
+
+    it('should ignore extraneous rows', inject([ParserService], (service: ParserService) => {
+      const input =
+        'K-PLUSSA MASTERCARD\n' +
+        'Luottoraja                                                              2.000,00\n' +
+        'Kuukausierä                                                                60,00\n' +
+        'Luoton korko                                                              9,19 %\n' +
+        '25.03. Saldo                                                               67,28\n' +
+        '25.03. Lyhennys                                                67,28\n' +
+        '       Saapuneet maksut yhteensä                                           67,28\n' +
+        '01.03. Osto  K MARKET OTANIEMI/ESPOO                                        9,34\n' +
+        '04.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                   7,56\n' +
+        '05.03. Osto  K MARKET OTANIEMI/ESPOO                                       11,57\n' +
+        '       Lyhennyksen osuus kuukausierästä                        60,00\n' +
+        '       Luoton määrä ennen maksua                                          166,02\n' +
+        'Maksettava vähintään EUR                                                   60,00\n' +
+        'Maksettava enintään EUR                                                   166,02\n' +
+        'Viitenumero on aina mainittava maksettaessa 00 00000 00000';
+
+      const expectation = [
+        {date: '25/03/2019', payee: 'Lyhennys', outflow: 0, inflow: 67.28},
+        {date: '01/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0},
+        {date: '04/03/2019', payee: 'K SUPERMARKET KAMPPI/HELSINK', outflow: 7.56, inflow: 0},
+        {date: '05/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 11.57, inflow: 0}
+      ];
+
+      expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
+    }));
 
   });
 });

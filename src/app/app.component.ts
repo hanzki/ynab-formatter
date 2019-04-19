@@ -10,7 +10,6 @@ import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/observable/of';
-import { Observable } from 'rxjs/Observable';
 import { ParserService } from './parser.service';
 
 @Component({
@@ -37,7 +36,7 @@ export class AppComponent implements OnInit {
       .map(([input, source]) => this.parser.parse(source, input))
       .catch((err, caught) => {
         console.error(err);
-        return Observable.of([]).concat(caught)
+        return caught;
       })
       .subscribe(transactions => this.ynabTransactions = transactions);
   }
