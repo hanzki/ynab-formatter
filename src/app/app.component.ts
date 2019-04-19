@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { saveAs } from 'file-saver';
 
 import 'rxjs/add/operator/debounceTime';
@@ -10,8 +10,8 @@ import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/startWith';
 import 'rxjs/add/operator/concat';
 import 'rxjs/add/observable/of';
-import {Observable} from 'rxjs/Observable';
-import {ParserService} from './parser';
+import { Observable } from 'rxjs/Observable';
+import { ParserService } from './parser.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +23,8 @@ export class AppComponent implements OnInit {
   transactionType = new FormControl('bank');
   ynabTransactions = [];
 
-  constructor(private parser: ParserService) {}
+  constructor(private parser: ParserService) {
+  }
 
   ngOnInit(): void {
     const transactionInput$ = this.bankTransactions.valueChanges.startWith('');

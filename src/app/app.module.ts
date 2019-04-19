@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 
 import { AppComponent } from './app.component';
-import {ParserService} from './parser';
+import { ParserService } from './parser.service';
 
 @NgModule({
   declarations: [

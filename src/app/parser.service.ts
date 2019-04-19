@@ -1,16 +1,16 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class ParserService {
 
   parse(source, input) { switch (source) {
-      case 'bank':
-        return this.formatBankTransactionsToYnab(input);
-      case 'ticketduo':
-        return this.formatTicketDuoTransactionsToYnab(input);
+    case 'bank':
+      return this.formatBankTransactionsToYnab(input);
+    case 'ticketduo':
+      return this.formatTicketDuoTransactionsToYnab(input);
     case 'norwegian':
-        return this.formatBankOfNorwegianTransactionsToYnab(input);
-    }
+      return this.formatBankOfNorwegianTransactionsToYnab(input);
+  }
   }
 
   formatBankTransactionsToYnab(input: string): any[] {
@@ -128,6 +128,33 @@ export class ParserService {
     }
 
     console.log(transactions);
+
+    return transactions;
+  }
+
+  formatKPlussaCardBillToYnab(input: string): any[] {
+    const lines = input.split('\n');
+    const nonEmptyLines = lines.map(line => line.trim()).filter(line => line !== '');
+    const transactions = [];
+
+    nonEmptyLines.forEach(line => {
+      const regex = /^(\d\d)\.(\d\d)\.\s+Osto\s+(.+)\s(\d+,\d\d)$/;
+      const match = regex.exec(line)
+
+      if(match) {
+        const date = match[1] + '/' + match[2] + '/' + new Date().getFullYear();
+        const payee = match[3].trim();
+        const outflow = Number(match[4].replace(',', '.'));
+        const inflow = 0;
+
+        transactions.push({
+          date: date,
+          payee: payee,
+          outflow: outflow,
+          inflow: inflow
+        })
+      }
+    });
 
     return transactions;
   }
