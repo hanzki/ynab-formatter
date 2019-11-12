@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { ParserService } from './parser.service';
+import { YnabExporterService } from './ynab-exporter.service';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,7 @@ import { ParserService } from './parser.service';
     BrowserModule,
     ReactiveFormsModule
   ],
-  providers: [ParserService],
+  providers: [ParserService, YnabExporterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

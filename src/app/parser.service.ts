@@ -47,7 +47,9 @@ export class ParserService {
   }
 
   private parseNumber(input: string): number {
-    if(!input) return NaN;
+    if (!input) {
+      return NaN;
+    }
     const sansSpaces = input.replace(/ /g, '');
     const commaReplaced = sansSpaces.replace(',', '.');
     return Number(commaReplaced);
