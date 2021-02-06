@@ -145,9 +145,24 @@ describe('ParserService', () => {
       expect(service.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);
     }));
 
+    it('should parse 2021 transactions correctly', inject([ParserService], (service: ParserService) => {
+      const input = 'NETFLIX.COM\n' +
+      '03.01.2021 - Osto\n' +
+      '-15,99\n' +
+      '\n';
+
+    const expectation = [
+      {date: '03/01/2021', payee: 'NETFLIX.COM', outflow: 15.99, inflow: 0}
+    ];
+
+    expect(service.formatBankOfNorwegianTransactionsToYnab(input)).toEqual(expectation);
+    }));
+
   });
 
   describe('#formatKPlussaCardBillToYnab', () => {
+
+    const currentYear = new Date().getFullYear();
 
     it('should return empty array on empty input', inject([ParserService], (service: ParserService) => {
       expect(service.formatKPlussaCardBillToYnab('')).toEqual([]);
@@ -157,7 +172,7 @@ describe('ParserService', () => {
       const input = '01.03. Osto  K MARKET OTANIEMI/ESPOO                                        9,34';
 
       const expectation = [
-        {date: '01/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0}
+        {date: `01/03/${currentYear}`, payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0}
       ];
 
       expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
@@ -170,9 +185,9 @@ describe('ParserService', () => {
         '05.03. Osto  K MARKET OTANIEMI/ESPOO                                       11,57';
 
       const expectation = [
-        {date: '01/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0},
-        {date: '04/03/2019', payee: 'K SUPERMARKET KAMPPI/HELSINK', outflow: 7.56, inflow: 0},
-        {date: '05/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 11.57, inflow: 0}
+        {date: `01/03/${currentYear}`, payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0},
+        {date: `04/03/${currentYear}`, payee: 'K SUPERMARKET KAMPPI/HELSINK', outflow: 7.56, inflow: 0},
+        {date: `05/03/${currentYear}`, payee: 'K MARKET OTANIEMI/ESPOO', outflow: 11.57, inflow: 0}
       ];
 
       expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
@@ -182,7 +197,7 @@ describe('ParserService', () => {
       const input = '25.03. Lyhennys                                                67,28';
 
       const expectation = [
-        {date: '25/03/2019', payee: 'Lyhennys', outflow: 0, inflow: 67.28}
+        {date: `25/03/${currentYear}`, payee: 'Lyhennys', outflow: 0, inflow: 67.28}
       ];
 
       expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
@@ -208,10 +223,10 @@ describe('ParserService', () => {
         'Viitenumero on aina mainittava maksettaessa 00 00000 00000';
 
       const expectation = [
-        {date: '25/03/2019', payee: 'Lyhennys', outflow: 0, inflow: 67.28},
-        {date: '01/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0},
-        {date: '04/03/2019', payee: 'K SUPERMARKET KAMPPI/HELSINK', outflow: 7.56, inflow: 0},
-        {date: '05/03/2019', payee: 'K MARKET OTANIEMI/ESPOO', outflow: 11.57, inflow: 0}
+        {date: `25/03/${currentYear}`, payee: 'Lyhennys', outflow: 0, inflow: 67.28},
+        {date: `01/03/${currentYear}`, payee: 'K MARKET OTANIEMI/ESPOO', outflow: 9.34, inflow: 0},
+        {date: `04/03/${currentYear}`, payee: 'K SUPERMARKET KAMPPI/HELSINK', outflow: 7.56, inflow: 0},
+        {date: `05/03/${currentYear}`, payee: 'K MARKET OTANIEMI/ESPOO', outflow: 11.57, inflow: 0}
       ];
 
       expect(service.formatKPlussaCardBillToYnab(input)).toEqual(expectation);
