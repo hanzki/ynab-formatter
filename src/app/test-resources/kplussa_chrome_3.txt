@@ -1,0 +1,27 @@
+K-PLUSSA MASTERCARD
+Luottoraja                                                              2.000,00
+Kuukausierä                                                                60,00
+Luoton korko                                                              9,19 %
+25.03. Saldo                                                               67,28
+25.03. Lyhennys                                                67,28
+       Saapuneet maksut yhteensä                                           67,28
+01.03. Osto  K MARKET OTANIEMI/ESPOO                                        9,34
+04.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                   7,56
+05.03. Osto  K MARKET OTANIEMI/ESPOO                                       11,57
+07.03. Osto  K MARKET OTANIEMI/ESPOO                                       15,58
+09.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  31,42
+12.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  17,40
+12.03. Osto  K SUPERMARKET KAISANIEMI/HEL                                   2,71
+19.03. Osto  K SUPERMARKET KAISANIEMI/HEL                                   1,19
+19.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  14,25
+20.03. Osto  K MARKET OTANIEMI/ESPOO                                        6,04
+20.03. Osto  K MARKET OTANIEMI/ESPOO                                        4,55
+21.03. Osto  K MARKET OTANIEMI/ESPOO                                        6,31
+25.03. Osto  K MARKET OTANIEMI/ESPOO                                        4,30
+29.03. Osto  K SUPERMARKET KAMPPI/HELSINK                                  11,32
+31.03. Osto  K MARKET OTANIEMI/ESPOO                                       22,48
+       Lyhennyksen osuus kuukausierästä                        60,00
+       Luoton määrä ennen maksua                                          166,02
+Maksettava vähintään EUR                                                   60,00
+Maksettava enintään EUR                                                   166,02
+Viitenumero on aina mainittava maksettaessa 00 00000 00000
