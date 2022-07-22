@@ -28,6 +28,12 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
     autoWatch: true,
     browsers: ['Chrome'],
-    singleRun: false
+    singleRun: false,
+    files: [
+      { pattern:  'src/app/test-resources/*.txt',
+        watched:  true,
+        served:   true,
+        included: false }
+    ]
   });
 };

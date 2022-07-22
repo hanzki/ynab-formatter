@@ -78,7 +78,7 @@ export class ParserService {
   }
 
   private formatTicketDuoDate(input: string): string {
-    const date = input.match(/\d\d\.\d\d\.\d\d\d?\d?/)[0];
+    const date = input.match(/\d{1,2}\.\d{1,2}\.\d\d\d?\d?/)[0];
     const fields = date.split('.');
     const day = fields[0].trim();
     const month = fields[1].trim();
@@ -103,7 +103,7 @@ export class ParserService {
     console.log(nonEmptyLines);
 
     let i;
-    while (( i = nonEmptyLines.findIndex(l => /\d\d\.\d\d\.\d\d/.test(l))) !== -1) {
+    while (( i = nonEmptyLines.findIndex(l => /\d{1,2}\.\d{1,2}\.\d\d/.test(l))) !== -1) {
 
       let blockSize = i + 2;
 

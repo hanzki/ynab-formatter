@@ -90,31 +90,30 @@ describe('ParserService', () => {
 
     it('should parse single transaction correctly', inject([ParserService], (service: ParserService) => {
 
-      const input = 'R ESPOO AALTOYO METROKESK\n' +
-        '27.02.19 - Osto\n' +
-        '-4,00\n' +
-        '\n';
+      const input = 'Wolt\n' +
+      '16.7.2022 - Osto\n' +
+      '-41,90';
 
-      const expectation = {date: '27/02/2019', payee: 'R ESPOO AALTOYO METROKESK', outflow: 4.00, inflow: 0};
+      const expectation = {date: '16/07/2022', payee: 'Wolt', outflow: 41.90, inflow: 0};
       expect(service.formatBankOfNorwegianTransactionsToYnab(input)).toEqual([expectation]);
     }));
 
     it('should parse multiple transactions correctly', inject([ParserService], (service: ParserService) => {
 
       const input = 'R ESPOO AALTOYO METROKESK\n' +
-        '27.02.19 - Osto\n' +
+        '27.2.19 - Osto\n' +
         '-4,00\n' +
         '\n' +
         'VFI*Manhattan Fast Food O\n' +
-        '27.02.19 - Osto\n' +
+        '27.2.19 - Osto\n' +
         '-4,80\n' +
         '\n' +
         'R ESPOO AALTOYO METROKESK\n' +
-        '26.02.19 - Osto\n' +
+        '26.2.19 - Osto\n' +
         '-4,00\n' +
         '\n' +
         'Maksaja HANNU HUHTAN\n' +
-        '15.02.19 - Maksu\n' +
+        '15.2.19 - Maksu\n' +
         '1 690,64\n';
 
       const expectation = [
@@ -130,7 +129,7 @@ describe('ParserService', () => {
     it('should parse transactions done in foreign currency', inject([ParserService], (service: ParserService) => {
 
       const input = 'jiu mu za wu she\n' +
-        '09.02.19 - Osto\n' +
+        '9.2.19 - Osto\n' +
         '-88,00 CNY\n' +
         'Valutabeløp\n' +
         '0,134\n' +
@@ -147,7 +146,7 @@ describe('ParserService', () => {
 
     it('should parse 2021 transactions correctly', inject([ParserService], (service: ParserService) => {
       const input = 'NETFLIX.COM\n' +
-      '03.01.2021 - Osto\n' +
+      '3.1.2021 - Osto\n' +
       '-15,99\n' +
       '\n';
 
