@@ -6,19 +6,26 @@ import Output from './Output';
 import { YnabTransaction } from '@/types';
 import { use, useCallback, useState } from 'react';
 import * as NordeaCsvParser from '@/parsers/nordea-csv-parser';
+import * as NorwegianExcelParser from '@/parsers/norwegian-excel-parser';
 
 export default function Home() {
-  const [transactions, setTransacitons] = useState<YnabTransaction[]>([]);
+  const [transactions, setTransactions] = useState<YnabTransaction[]>([]);
 
   const onInputChange = useCallback((async (source: string, selectedFile: File | null, pasteText: string) => {
     // use file contents if file is selected, otherwise use paste text
     const inputText = await (selectedFile ? selectedFile.text() : Promise.resolve(pasteText));
     switch (source) {
       case 'nordea':
-        setTransacitons(NordeaCsvParser.parse(inputText));
+        setTransactions(NordeaCsvParser.parse(inputText));
+        break;
+
+      case 'norwegian':
+        if (selectedFile) {
+          setTransactions(await NorwegianExcelParser.parseFile(selectedFile));
+        }
         break;
       default:
-        setTransacitons([]);
+        setTransactions([]);
         break;
     }
   }), []);

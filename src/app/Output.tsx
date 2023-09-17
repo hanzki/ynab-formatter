@@ -41,11 +41,12 @@ export default function Output({
     // Date format: MM/DD/YYYY
     // Memo: empty
     const downloadCsv = () => {
+        const filterCommas = (s: string) => s.replace(/,/g, ' ');
         const header = 'Date,Payee,Memo,Outflow,Inflow\n';
         const csv = header + transactions.map(t => {
             const date = t.date.toLocaleDateString('en-US');
-            const payee = t.payee;
-            const memo = t.description || "";
+            const payee = filterCommas(t.payee);
+            const memo = filterCommas(t.description || "");
             const outflow = t.outflow;
             const inflow = t.inflow;
             return `${date},${payee},${memo},${outflow},${inflow}`;

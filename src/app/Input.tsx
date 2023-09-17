@@ -34,7 +34,7 @@ function FileInput({selectedFile, setSelectedFile, disabled, inputRef}: FileInpu
             <Form.Label>Select a file</Form.Label>
             <Form.Control
                 type="file"
-                accept='.xml,.csv,.xslx'
+                accept='.xml,.csv,.xlsx'
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setSelectedFile(e.target.files && e.target.files[0])}
                 disabled={disabled}
                 ref={inputRef}
