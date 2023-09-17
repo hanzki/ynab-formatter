@@ -1,4 +1,4 @@
-import { RefObject, useRef, useState } from 'react';
+import { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 
 const DEFAULT_SOURCE = "bank";
@@ -16,6 +16,7 @@ function SourceSelect({source, setSource}: SourceSelectProps) {
                 <option value="ticketduo">TicketDuo</option>
                 <option value="norwegian">Bank of Norwegian</option>
                 <option value="kplussa">K-Plussa Mastercard</option>
+                <option value="nordea">Nordea</option>
             </Form.Select>
         </Form.Group>
     )
@@ -23,7 +24,7 @@ function SourceSelect({source, setSource}: SourceSelectProps) {
 
 interface FileInputProps {
     selectedFile?: File | null,
-    setSelectedFile: (f: File) => void,
+    setSelectedFile: (f: File | null) => void,
     disabled?: boolean,
     inputRef?: RefObject<HTMLInputElement>
 }
@@ -34,7 +35,7 @@ function FileInput({selectedFile, setSelectedFile, disabled, inputRef}: FileInpu
             <Form.Control
                 type="file"
                 accept='.xml,.csv,.xslx'
-                onChange={e => setSelectedFile(e.target.files && e.target.files[0])}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setSelectedFile(e.target.files && e.target.files[0])}
                 disabled={disabled}
                 ref={inputRef}
             />
@@ -63,11 +64,20 @@ function PasteTextarea({pasteText, setPasteText, disabled}: PasteTextareaProps) 
     )
 }
 
+interface InputProps {
+    onInputChange: (source: string, selectedFile: File | null, pasteText: string) => void
+}
 export default function Input({
-}) {
+    onInputChange
+}: InputProps) {
     const [source, setSource] = useState<string>(DEFAULT_SOURCE);
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
     const [pasteText, setPasteText] = useState<string>("");
+
+    // call onInputChange when source, selectedFile, or pasteText changes
+    useEffect(() => {
+        onInputChange(source, selectedFile, pasteText);
+    }, [source, selectedFile, pasteText, onInputChange]);
 
     const selectedFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,7 +98,7 @@ export default function Input({
         }
     }
 
-    const onSelectedFileChange = (newFile: File) => {
+    const onSelectedFileChange = (newFile: File | null) => {
         const changed = newFile != selectedFile;
         setSelectedFile(newFile);
         if (changed) {

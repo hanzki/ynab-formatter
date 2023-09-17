@@ -2,8 +2,27 @@
 
 import Input from './Input'
 import { Container, Row, Col, Navbar, Nav } from 'react-bootstrap'
+import Output from './Output';
+import { YnabTransaction } from '@/types';
+import { use, useCallback, useState } from 'react';
+import * as NordeaCsvParser from '@/parsers/nordea-csv-parser';
 
 export default function Home() {
+  const [transactions, setTransacitons] = useState<YnabTransaction[]>([]);
+
+  const onInputChange = useCallback((async (source: string, selectedFile: File | null, pasteText: string) => {
+    // use file contents if file is selected, otherwise use paste text
+    const inputText = await (selectedFile ? selectedFile.text() : Promise.resolve(pasteText));
+    switch (source) {
+      case 'nordea':
+        setTransacitons(NordeaCsvParser.parse(inputText));
+        break;
+      default:
+        setTransacitons([]);
+        break;
+    }
+  }), []);
+
   return (
     <main>
       <Container>
@@ -17,29 +36,10 @@ export default function Home() {
         </Navbar>
         <Row>
           <Col>
-            <Input />
+            <Input onInputChange={onInputChange}/>
           </Col>
           <Col>
-            <h2>Output</h2>
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Payee</th>
-                  <th>Outflow</th>
-                  <th>Inflow</th>
-                </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>dd.mm.yyyy</td>
-                <td>ACME corp</td>
-                <td className="text-right">2.00€</td>
-                <td className="text-right">0.00€</td>
-              </tr>
-              </tbody>
-            </table>
-            <button className="btn btn-primary">Download CSV</button>
+            <Output transactions={transactions}/>
           </Col>
         </Row>
       </Container>
