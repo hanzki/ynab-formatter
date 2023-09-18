@@ -18,7 +18,7 @@ describe('NordeaCsvParser', () => {
             payee: 'BANK NORWEGIAN SAVINGS',
             outflow: 10000,
             inflow: 0,
-            description: "FIXX XXXX XXXX XXXX XX"
+            description: ""
         }];
         const actual = NordeaCsvParser.parse(input);
         expect(actual).toEqual(expected);
@@ -32,14 +32,14 @@ describe('NordeaCsvParser', () => {
                 payee: 'BANK NORWEGIAN SAVINGS',
                 outflow: 10000,
                 inflow: 0,
-                description: "FIXX XXXX XXXX XXXX XX"
+                description: ""
             },
             {
                 date: new Date('2023-09-15'),
                 payee: 'ORG CORP',
                 outflow: 0,
                 inflow: 3402.4,
-                description: "FIXX XXXX XXXX XXXX XX"
+                description: ""
             }
         ];
         const actual = NordeaCsvParser.parse(input);
@@ -54,7 +54,7 @@ describe('NordeaCsvParser', () => {
                 payee: 'BANK NORWEGIAN SAVINGS',
                 outflow: 10000,
                 inflow: 0,
-                description: "FIXX XXXX XXXX XXXX XX"
+                description: ""
             }
         ];
         const actual = NordeaCsvParser.parse(input);

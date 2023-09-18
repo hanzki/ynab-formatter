@@ -24,7 +24,7 @@ function parseLine(line: string): YnabTransaction {
     const payee = fields[5]
     const outflow = amount < 0 ? -amount : 0
     const inflow = amount > 0 ? amount : 0
-    const description = fields[2]
+    const description = ''
     return {
         date,
         payee,

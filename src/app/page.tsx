@@ -6,6 +6,7 @@ import Output from './Output';
 import { YnabTransaction } from '@/types';
 import { use, useCallback, useState } from 'react';
 import * as NordeaCsvParser from '@/parsers/nordea-csv-parser';
+import * as SpankkiCsvParser from '@/parsers/spankki-csv-parser';
 import * as NorwegianExcelParser from '@/parsers/norwegian-excel-parser';
 
 export default function Home() {
@@ -24,6 +25,11 @@ export default function Home() {
           setTransactions(await NorwegianExcelParser.parseFile(selectedFile));
         }
         break;
+
+      case 'spankki':
+        setTransactions(SpankkiCsvParser.parse(inputText));
+        break;
+
       default:
         setTransactions([]);
         break;
@@ -37,7 +43,7 @@ export default function Home() {
           <Container>
             <Navbar.Brand>YNAB Formatter</Navbar.Brand>
             <Nav>
-              <Nav.Link href='https://app.youneedabudget.com'>YNAB</Nav.Link>
+              <Nav.Link href='https://app.youneedabudget.com' target='_blank'>YNAB</Nav.Link>
             </Nav>
           </Container>
         </Navbar>

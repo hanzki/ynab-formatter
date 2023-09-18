@@ -1,7 +1,7 @@
 import { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 
-const DEFAULT_SOURCE = "bank";
+const DEFAULT_SOURCE = "spankki";
 
 interface SourceSelectProps {
     source?: string,
@@ -12,10 +12,10 @@ function SourceSelect({source, setSource}: SourceSelectProps) {
         <Form.Group className="mb-3" controlId="exampleForm.SourceSelect">
             <Form.Label>Source</Form.Label>
             <Form.Select value={source} onChange={e => setSource(e.target.value)}>
-                <option value="bank">Ålandsbanken / S-Pankki</option>
-                <option value="ticketduo">TicketDuo</option>
+                <option value="spankki">S-Pankki</option>
+                <option value="ticketduo">TicketDuo (TODO)</option>
                 <option value="norwegian">Bank of Norwegian</option>
-                <option value="kplussa">K-Plussa Mastercard</option>
+                <option value="kplussa">K-Plussa Mastercard (TODO)</option>
                 <option value="nordea">Nordea</option>
             </Form.Select>
         </Form.Group>
